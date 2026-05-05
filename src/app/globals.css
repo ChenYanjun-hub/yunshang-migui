@@ -13,6 +13,9 @@
   --accent-gold-hover: #8a6d36;
   --accent-gold-muted: rgba(168, 136, 74, 0.12);
 
+  --migui-yellow: #efa518;
+  --migui-yellow-soft: rgba(239, 165, 24, 0.18);
+
   --earth-brown: #8b7355;
   --earth-rust: #a0522d;
   --earth-sand: #d4c4a8;
@@ -57,6 +60,9 @@
   --color-accent: var(--accent-gold);
   --color-accent-hover: var(--accent-gold-hover);
   --color-accent-muted: var(--accent-gold-muted);
+
+  --color-migui-yellow: var(--migui-yellow);
+  --color-migui-yellow-soft: var(--migui-yellow-soft);
 
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);

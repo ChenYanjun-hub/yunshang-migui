@@ -89,7 +89,7 @@ export default function Intro() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle at center, rgba(168,136,74,0.42) 0%, rgba(168,136,74,0.12) 35%, transparent 65%)',
+            'radial-gradient(circle at center, rgba(239,165,24,0.45) 0%, rgba(239,165,24,0.14) 35%, transparent 65%)',
           opacity: entering ? 1 : 0,
           transform: entering ? 'scale(2.2)' : 'scale(0.9)',
           transformOrigin: 'center',

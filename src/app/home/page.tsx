@@ -69,7 +69,7 @@ export default function Home() {
         </p>
 
         <h1 className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] font-medium leading-[1.15] tracking-wide text-center text-text-primary">
-          一条<span className="text-accent">云上米轨</span>
+          一条<span className="text-migui-yellow">云上米轨</span>
           <br />
           半部西南近代史
         </h1>

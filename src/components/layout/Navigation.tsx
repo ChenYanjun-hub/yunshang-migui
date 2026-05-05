@@ -53,7 +53,7 @@ export function Navigation() {
               <Link
                 href={link.href}
                 className={`relative group inline-flex flex-col items-center transition-colors duration-300
-                  ${active ? 'text-accent' : 'text-text-secondary hover:text-text-primary'}`}
+                  ${active ? 'text-migui-yellow' : 'text-text-secondary hover:text-text-primary'}`}
               >
                 <span className="text-sm tracking-[0.2em]">{link.label}</span>
                 <span
@@ -63,8 +63,8 @@ export function Navigation() {
                   {link.en}
                 </span>
                 <span
-                  className={`absolute -bottom-1.5 left-0 right-0 mx-auto h-px bg-accent transition-all duration-300
-                    ${active ? 'w-full' : 'w-0 group-hover:w-full'}`}
+                  className={`absolute -bottom-1.5 left-0 right-0 mx-auto h-px transition-all duration-300
+                    ${active ? 'w-full bg-migui-yellow' : 'w-0 bg-accent group-hover:w-full'}`}
                 />
               </Link>
             </li>

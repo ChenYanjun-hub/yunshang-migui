@@ -429,7 +429,7 @@ function Lightbox({
       aria-modal="true"
       aria-label={item.title}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-12
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain
                  bg-[rgba(20,18,14,0.92)] backdrop-blur-sm
                  animate-[page-fade-in_320ms_ease-out_both]"
     >
@@ -437,16 +437,18 @@ function Lightbox({
       <button
         onClick={onClose}
         aria-label="关闭"
-        className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center
+        className="fixed top-6 right-6 z-10 w-10 h-10 flex items-center justify-center
                    border border-white/30 text-white/80 hover:border-accent hover:text-accent
+                   bg-[rgba(20,18,14,0.6)] backdrop-blur-sm
                    transition-colors text-xl"
       >
         ×
       </button>
 
+      <div className="min-h-full flex items-center justify-center p-4 md:p-12">
       <div
-        className="relative max-w-6xl w-full max-h-full grid md:grid-cols-[1.6fr_1fr] gap-6 md:gap-10
-                   bg-background border border-accent/30"
+        className="relative max-w-6xl w-full grid md:grid-cols-[1.6fr_1fr] gap-6 md:gap-10
+                   bg-background border border-accent/30 my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 图片区 */}
@@ -520,9 +522,9 @@ function Lightbox({
           </dl>
 
           <div className="mt-auto pt-8">
-            <div className="border border-accent/40 bg-accent/5 p-4">
+            <div className="border border-migui-yellow/50 bg-migui-yellow/[0.06] p-4">
               <p
-                className="text-[10px] tracking-[0.4em] uppercase italic text-accent mb-2"
+                className="text-[10px] tracking-[0.4em] uppercase italic text-migui-yellow mb-2"
                 style={enFont}
               >
                 VIP Access
@@ -533,6 +535,7 @@ function Lightbox({
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
