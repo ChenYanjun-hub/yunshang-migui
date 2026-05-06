@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Navigation } from '@/components/layout/Navigation';
 import type { ArchivePeriod, ArchiveType } from '@/types';
 
@@ -423,40 +424,39 @@ function Lightbox({
   item: ArchiveItem;
   onClose: () => void;
 }) {
-  return (
+  const content = (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={item.title}
       onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain
-                 bg-[rgba(20,18,14,0.92)] backdrop-blur-sm
-                 animate-[page-fade-in_320ms_ease-out_both]"
+      className="fixed inset-0 z-50
+                 bg-[rgba(20,18,14,0.95)]
+                 animate-[lightbox-in_280ms_ease-out]
+                 flex items-center justify-center p-6"
     >
       {/* 关闭按钮 */}
       <button
         onClick={onClose}
         aria-label="关闭"
-        className="fixed top-6 right-6 z-10 w-10 h-10 flex items-center justify-center
+        className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center
                    border border-white/30 text-white/80 hover:border-accent hover:text-accent
-                   bg-[rgba(20,18,14,0.6)] backdrop-blur-sm
                    transition-colors text-xl"
       >
         ×
       </button>
 
-      <div className="min-h-full flex items-center justify-center p-4 md:p-12">
       <div
-        className="relative max-w-6xl w-full grid md:grid-cols-[1.6fr_1fr] gap-6 md:gap-10
-                   bg-background border border-accent/30 my-auto"
+        className="relative max-w-5xl w-full grid md:grid-cols-[1.4fr_1fr] gap-0
+                   bg-background border border-accent/30 max-h-[88vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 图片区 */}
-        <div className="relative bg-surface-2 flex items-center justify-center min-h-[50vh]">
+        <div className="relative bg-surface-2 flex items-center justify-center">
           <img
             src={imageUrl(item.id, Math.max(item.height, 1100))}
             alt={item.title}
-            className="max-w-full max-h-[80vh] object-contain"
+            className="max-w-full max-h-[88vh] object-contain"
             style={{ filter: 'sepia(0.18) contrast(0.96)' }}
           />
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -470,7 +470,7 @@ function Lightbox({
         </div>
 
         {/* 信息区 */}
-        <div className="p-6 md:p-8 flex flex-col">
+        <div className="p-6 md:p-8 flex flex-col overflow-y-auto max-h-[88vh]">
           <p
             className="text-[10px] tracking-[0.4em] uppercase italic text-accent mb-3"
             style={enFont}
@@ -536,7 +536,8 @@ function Lightbox({
           </div>
         </div>
       </div>
-      </div>
     </div>
   );
+
+  return createPortal(content, document.body);
 }
