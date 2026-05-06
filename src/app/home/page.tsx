@@ -57,6 +57,23 @@ const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden page-fade-in">
+      {/* 地图底纹 */}
+      <div
+        aria-hidden
+        className="fixed inset-0 -z-10 pointer-events-none overflow-hidden flex items-center justify-center"
+      >
+        <img
+          src="/images/overall-map.png"
+          alt=""
+          className="w-[130vw] md:w-[105vw] max-w-[1600px] select-none"
+          style={{
+            mixBlendMode: 'multiply',
+            opacity: 0.22,
+            filter: 'sepia(0.45) saturate(0.45) contrast(0.9)',
+          }}
+        />
+      </div>
+
       <Navigation />
 
       {/* ============ HERO ============ */}
@@ -92,9 +109,10 @@ export default function Home() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="carriage group relative block bg-surface-1 border border-border-subtle
+                className="carriage group relative block bg-surface-1/95 backdrop-blur-sm border border-border-hard/60
+                           shadow-[0_1px_4px_rgba(26,24,20,0.06)]
                            transition-[transform,box-shadow,border-color] duration-500 ease-out
-                           hover:border-accent/60"
+                           hover:border-accent/60 hover:shadow-[0_8px_24px_rgba(26,24,20,0.12)]"
               >
                 {/* 车顶金条 */}
                 <div className="absolute top-0 left-3 right-3 h-[3px] bg-accent/70" />
@@ -167,7 +185,7 @@ export default function Home() {
       </section>
 
       {/* ============ STATS ============ */}
-      <section className="py-24 md:py-32 border-y border-border-subtle">
+      <section className="py-24 md:py-32 border-y border-border-subtle bg-background/80 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-16">
             <p
@@ -252,7 +270,7 @@ export default function Home() {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="py-32 text-center border-t border-border-subtle">
+      <section className="py-32 text-center border-t border-border-subtle bg-background/80 backdrop-blur-sm">
         <p
           className="text-[11px] tracking-[0.5em] uppercase italic text-accent mb-6"
           style={enFont}
