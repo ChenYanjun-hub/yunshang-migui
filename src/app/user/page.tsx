@@ -1,13 +1,14 @@
-'use client';
-
+import { redirect } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
+import { createClient } from '@/lib/supabase/server';
+import { signOut } from '../auth/actions';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
 const stats = [
-  { label: '收藏', en: 'Collected', value: 24 },
-  { label: '打卡', en: 'Check-ins', value: 8 },
-  { label: '勋章', en: 'Stamps', value: 5 },
+  { label: '收藏', en: 'Collected', value: 0 },
+  { label: '打卡', en: 'Check-ins', value: 0 },
+  { label: '勋章', en: 'Stamps', value: 0 },
 ];
 
 const menu = [
@@ -19,7 +20,35 @@ const menu = [
   { title: '账号设置', en: 'Account', desc: '个人信息、隐私与安全' },
 ];
 
-export default function UserPage() {
+const ROLE_LABEL: Record<string, { zh: string; en: string }> = {
+  user: { zh: '普通会员', en: 'Member' },
+  admin_product: { zh: '产品部', en: 'Product Admin' },
+  admin_tech: { zh: '技术部', en: 'Tech Admin' },
+  admin_ops: { zh: '运营部', en: 'Operations Admin' },
+  admin_biz: { zh: '商务部', en: 'Business Admin' },
+  super_admin: { zh: '超级管理员', en: 'Super Admin' },
+};
+
+export default async function UserPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect('/auth/login?redirect=/user');
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('nickname, avatar_url, role, created_at')
+    .eq('id', user.id)
+    .single();
+
+  const nickname = profile?.nickname ?? '米轨用户';
+  const role = profile?.role ?? 'user';
+  const roleLabel = ROLE_LABEL[role] ?? ROLE_LABEL.user;
+  const joinedYear = profile?.created_at
+    ? new Date(profile.created_at).getFullYear()
+    : new Date().getFullYear();
+
   return (
     <main className="min-h-screen bg-background text-foreground page-fade-in">
       <Navigation />
@@ -34,32 +63,40 @@ export default function UserPage() {
           </p>
 
           <div className="grid md:grid-cols-[auto_1fr] gap-8 items-start mb-14 border-b border-border-subtle pb-12">
-            <div className="w-24 h-24 bg-surface-1 border border-border-hard flex items-center justify-center font-serif text-2xl text-accent tracking-[0.2em]">
-              旅人
+            <div className="w-24 h-24 bg-surface-1 border border-border-hard flex items-center justify-center font-serif text-2xl text-accent tracking-[0.2em] overflow-hidden">
+              {profile?.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profile.avatar_url} alt={nickname} className="w-full h-full object-cover" />
+              ) : (
+                nickname.slice(0, 2)
+              )}
             </div>
             <div className="flex-1">
               <h1 className="font-serif text-3xl md:text-4xl tracking-[0.1em] text-text-primary mb-2">
-                旅人 · Wanderer
+                {nickname}
               </h1>
               <p
                 className="text-[11px] tracking-[0.3em] italic text-text-muted mb-5"
                 style={enFont}
               >
-                user@example.com · joined 2026
+                {user.email} · joined {joinedYear}
               </p>
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center flex-wrap">
                 <span
                   className="px-3 py-1.5 text-[10px] tracking-[0.3em] uppercase italic border border-accent text-accent"
                   style={enFont}
                 >
-                  Member · 普通会员
+                  {roleLabel.en} · {roleLabel.zh}
                 </span>
-                <button
-                  className="px-4 py-1.5 text-[10px] tracking-[0.3em] uppercase italic border border-border-hard text-text-secondary hover:border-accent hover:text-accent transition-colors"
-                  style={enFont}
-                >
-                  Upgrade VIP →
-                </button>
+                {role !== 'user' && (
+                  <a
+                    href="/admin"
+                    className="px-4 py-1.5 text-[10px] tracking-[0.3em] uppercase italic border border-border-hard text-text-secondary hover:border-accent hover:text-accent transition-colors"
+                    style={enFont}
+                  >
+                    Admin Panel →
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -102,6 +139,15 @@ export default function UserPage() {
               </div>
             ))}
           </div>
+
+          <form action={signOut} className="pt-10">
+            <button
+              type="submit"
+              className="w-full py-3 border border-border-hard text-text-secondary tracking-[0.3em] text-sm hover:border-accent hover:text-accent transition-colors"
+            >
+              退 出 登 录
+            </button>
+          </form>
         </div>
       </section>
 
