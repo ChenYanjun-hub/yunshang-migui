@@ -58,5 +58,5 @@ export async function proxy(request: NextRequest) {
 // 只在需要鉴权的路由上跑，其他路由（如 /home）不经过 Supabase，
 // 避免国内网络访问 supabase.co 超时拖慢全站。
 export const config = {
-  matcher: ['/user/:path*', '/admin/:path*', '/auth/:path*'],
+  matcher: ['/user/:path*', '/admin/:path*', '/auth/:path*', '/community/new'],
 };
