@@ -286,6 +286,7 @@ body {
 
 .paper-texture {
   position: relative;
+  isolation: isolate;
 }
 
 .paper-texture::before {
@@ -293,15 +294,10 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   opacity: 0.025;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   mix-blend-mode: multiply;
-}
-
-.paper-texture > * {
-  position: relative;
-  z-index: 1;
 }
 
 /* ========================================
