@@ -79,10 +79,12 @@ export default function Home() {
       {/* ============ HERO ============ */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-12">
         <p
-          className="text-[11px] tracking-[0.5em] uppercase text-text-muted mb-8 italic"
-          style={enFont}
+          className="archive-label mb-8 flex items-center gap-3"
+          style={{ fontFamily: 'var(--font-typewriter)' }}
         >
-          Dianyue Railway · Est. 1910
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-cinnabar" />
+          <span>RECORD · DIANYUE RAILWAY · EST. 1910</span>
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-cinnabar" />
         </p>
 
         <h1 className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] font-medium leading-[1.15] tracking-wide text-center text-text-primary">
@@ -93,12 +95,14 @@ export default function Home() {
 
         <div className="flex items-center gap-4 mt-10">
           <span className="block w-12 h-px bg-border-hard" />
+          <span className="block w-1 h-1 rounded-full bg-cinnabar" />
           <span
             className="text-[10px] tracking-[0.4em] uppercase italic text-text-secondary"
             style={enFont}
           >
             The Steel Spine Through Time
           </span>
+          <span className="block w-1 h-1 rounded-full bg-cinnabar" />
           <span className="block w-12 h-px bg-border-hard" />
         </div>
 

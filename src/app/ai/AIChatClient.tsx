@@ -10,14 +10,17 @@ const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
 type Props = {
   suggestions: string[];
+  initialQuery?: string;
+  from?: string;
 };
 
-export default function AIChatClient({ suggestions }: Props) {
+export default function AIChatClient({ suggestions, initialQuery, from }: Props) {
+  void from; // 预留：明晚 RAG 用于来源溯源
   const { messages, sendMessage, status, stop } = useChat({
     transport: new DefaultChatTransport({ api: '/api/ai/chat' }),
   });
 
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(initialQuery ?? '');
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const isStreaming = status === 'submitted' || status === 'streaming';

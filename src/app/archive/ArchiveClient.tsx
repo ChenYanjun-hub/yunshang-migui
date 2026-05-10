@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
 
 export type ArchivePeriod = 'construction' | 'operation' | 'republic' | 'prc' | 'heritage';
@@ -336,7 +337,28 @@ function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void })
             </div>
           </dl>
 
-          <div className="mt-auto pt-8">
+          <div className="mt-auto pt-8 space-y-4">
+            <Link
+              href={{
+                pathname: '/ai',
+                query: {
+                  q: `请帮我解读这条史料：《${item.title}》（${item.year} 年，${periodLabels[item.period]}）。${item.description}`,
+                  from: `archive:${item.id}`,
+                },
+              }}
+              className="group relative flex items-center justify-between border-2 border-cinnabar bg-cinnabar/[0.04] hover:bg-cinnabar hover:text-[#f8f5ee] text-cinnabar transition-all duration-200 px-5 py-3.5"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className="archive-label text-cinnabar group-hover:text-[#f8f5ee]/80 transition-colors"
+                  style={{ fontFamily: 'var(--font-typewriter)' }}
+                >
+                  ASK NANDU AI
+                </span>
+                <span className="font-serif text-base tracking-[0.15em]">问问南渡</span>
+              </div>
+              <span className="font-serif text-lg group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
             <div className="border border-migui-yellow/50 bg-migui-yellow/[0.06] p-4">
               <p className="text-[10px] tracking-[0.4em] uppercase italic text-migui-yellow mb-2" style={enFont}>
                 VIP Access

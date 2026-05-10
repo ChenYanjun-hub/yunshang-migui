@@ -7,11 +7,20 @@ export const metadata = {
   description: '南渡 —— 基于 DeepSeek V3 + RAG 的滇越铁路垂直领域大模型。一百二十年米轨史，皆可问询，答必有据。',
 };
 
-export default function AIPage() {
+export default async function AIPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; from?: string }>;
+}) {
+  const { q, from } = await searchParams;
   return (
     <main className="min-h-screen bg-background text-foreground page-fade-in flex flex-col">
       <Navigation />
-      <AIChatClient suggestions={RECOMMENDED_QUESTIONS} />
+      <AIChatClient
+        suggestions={RECOMMENDED_QUESTIONS}
+        initialQuery={typeof q === 'string' ? q : undefined}
+        from={typeof from === 'string' ? from : undefined}
+      />
     </main>
   );
 }
