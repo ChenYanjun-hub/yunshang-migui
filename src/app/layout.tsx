@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_SC, Noto_Serif_SC, EB_Garamond } from "next/font/google";
+import { Noto_Sans_SC, Noto_Serif_SC, EB_Garamond, Special_Elite } from "next/font/google";
 import "./globals.css";
 
 const notoSansSC = Noto_Sans_SC({
@@ -24,6 +24,13 @@ const ebGaramond = EB_Garamond({
   display: "swap",
 });
 
+const specialElite = Special_Elite({
+  variable: "--font-typewriter",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "云上米轨 | Yunshang Migui",
   description: "一条云上米轨，半部西南近代史。滇越铁路数字文化遗产游览平台",
@@ -38,9 +45,9 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${notoSansSC.variable} ${notoSerifSC.variable} ${ebGaramond.variable} h-full antialiased`}
+      className={`${notoSansSC.variable} ${notoSerifSC.variable} ${ebGaramond.variable} ${specialElite.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="paper-texture min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
     </html>

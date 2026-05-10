@@ -30,6 +30,12 @@
   --text-primary: #1a1814;
   --text-secondary: #6b6358;
   --text-muted: #948b7e;
+
+  /* 副色：墨黑 + 朱砂红（评委 30 秒视觉锚点） */
+  --ink: #14110d;
+  --cinnabar: #8b2e1f;
+  --cinnabar-hover: #a23a28;
+  --cinnabar-soft: rgba(139, 46, 31, 0.10);
 }
 
 [data-theme="immersive"] {
@@ -75,9 +81,15 @@
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
 
-  --font-serif: var(--font-serif-cn), "Songti SC", Georgia, serif;
+  --color-ink: var(--ink);
+  --color-cinnabar: var(--cinnabar);
+  --color-cinnabar-hover: var(--cinnabar-hover);
+  --color-cinnabar-soft: var(--cinnabar-soft);
+
+  --font-serif: "Kinghwa OldSong", var(--font-serif-cn), "Songti SC", Georgia, serif;
   --font-sans: var(--font-sans-cn), "PingFang SC", -apple-system, sans-serif;
   --font-serif-en: var(--font-garamond), Georgia, "Noto Serif SC", serif;
+  --font-typewriter: var(--font-typewriter), "Special Elite", "Courier New", monospace;
   --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
 }
 
@@ -265,4 +277,94 @@ body {
 
 .carriage:hover::after {
   opacity: 1;
+}
+
+/* ========================================
+   纸张纹理 - 全局极细颗粒噪点
+   Paper Texture - global subtle noise
+   ======================================== */
+
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+
+.paper-texture > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========================================
+   档案标签 - 打字机字体（点睛）
+   Archive Label - typewriter accent
+   ======================================== */
+
+.archive-label {
+  font-family: var(--font-typewriter);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   印章按钮 - 朱砂 CTA
+   Seal Button - cinnabar primary CTA
+   ======================================== */
+
+.btn-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--cinnabar);
+  color: #f8f5ee;
+  border: 1px solid var(--cinnabar);
+  padding: 0.7rem 1.6rem;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow:
+    inset 0 0 0 2px rgba(248, 245, 238, 0.18),
+    0 1px 0 rgba(20, 17, 13, 0.15);
+}
+
+.btn-seal:hover {
+  background: var(--cinnabar-hover);
+  border-color: var(--cinnabar-hover);
+  transform: translateY(-1px);
+}
+
+.btn-seal:active {
+  transform: translateY(0);
+}
+
+.btn-seal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========================================
+   重点引文 - 朱砂左边线（marginalia）
+   Pull-quote with cinnabar marginalia
+   ======================================== */
+
+.pull-quote {
+  border-left: 2px solid var(--cinnabar);
+  padding: 0.25rem 0 0.25rem 1rem;
+  font-family: var(--font-serif);
+  color: var(--ink);
 }

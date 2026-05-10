@@ -6,11 +6,14 @@ import { useEffect, useState } from 'react';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
-const links = [
+type NavLink = { href: string; label: string; en: string; accent?: boolean };
+
+const links: NavLink[] = [
   { href: '/archive', label: '史料藏馆', en: 'Archive' },
   { href: '/cloud-tour', label: '云游导览', en: 'Cloud Tour' },
   { href: '/exhibition', label: '光影展览', en: 'Exhibition' },
   { href: '/community', label: '研学社区', en: 'Community' },
+  { href: '/ai', label: '南渡 AI', en: 'Nandu AI', accent: true },
   { href: '/store', label: '文创商城', en: 'Store' },
 ];
 
@@ -52,8 +55,10 @@ export function Navigation() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`relative group inline-flex flex-col items-center transition-colors duration-300
-                  ${active ? 'text-migui-yellow' : 'text-text-secondary hover:text-text-primary'}`}
+                className={`relative group inline-flex flex-col items-center px-3 py-1.5 transition-all duration-300
+                  ${active
+                    ? `${link.accent ? 'text-cinnabar' : 'text-migui-yellow'} bg-surface-1 border border-border-subtle shadow-[0_1px_0_rgba(20,17,13,0.04)]`
+                    : (link.accent ? 'text-cinnabar/85 hover:text-cinnabar border border-transparent' : 'text-text-secondary hover:text-text-primary border border-transparent')}`}
               >
                 <span className="text-sm tracking-[0.2em]">{link.label}</span>
                 <span
@@ -62,10 +67,12 @@ export function Navigation() {
                 >
                   {link.en}
                 </span>
-                <span
-                  className={`absolute -bottom-1.5 left-0 right-0 mx-auto h-px transition-all duration-300
-                    ${active ? 'w-full bg-migui-yellow' : 'w-0 bg-accent group-hover:w-full'}`}
-                />
+                {!active && (
+                  <span
+                    className={`absolute -bottom-0.5 left-3 right-3 mx-auto h-px transition-all duration-300
+                      w-0 ${link.accent ? 'bg-cinnabar' : 'bg-accent'} group-hover:w-[calc(100%-1.5rem)]`}
+                  />
+                )}
               </Link>
             </li>
           );
