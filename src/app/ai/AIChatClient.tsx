@@ -3,6 +3,8 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useEffect, useRef, useState } from 'react';
+import TextType from '@/components/animations/TextType';
+import Threads from '@/components/animations/Threads';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
@@ -44,8 +46,25 @@ export default function AIChatClient({ suggestions }: Props) {
   // 空态：composer 居中 + 推荐问题在下
   if (empty) {
     return (
-      <section className="flex-1 flex flex-col items-center justify-center px-6 md:px-12 py-20">
-        <div className="w-full max-w-3xl">
+      <section className="relative flex-1 flex flex-col items-center justify-center px-6 md:px-12 py-20 overflow-hidden">
+        {/* Threads 朱砂丝线背景 —— 像纸上晕开的墨与朱砂 */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.55]"
+          style={{
+            maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
+            mixBlendMode: 'multiply',
+          }}
+        >
+          <Threads
+            color={[0.545, 0.180, 0.121]}
+            amplitude={0.9}
+            distance={0.35}
+            enableMouseInteraction={false}
+          />
+        </div>
+
+        <div className="relative z-10 w-full max-w-3xl">
           {/* 品牌头 */}
           <div className="text-center mb-10">
             <p
@@ -58,14 +77,26 @@ export default function AIChatClient({ suggestions }: Props) {
               南渡
             </h1>
             <p
-              className="italic text-text-secondary text-lg md:text-xl tracking-wide mb-2"
+              className="italic text-text-secondary text-lg md:text-xl tracking-wide mb-3"
               style={enFont}
             >
               Nandu
             </p>
-            <p className="text-sm md:text-base text-text-secondary tracking-wider">
-              云南米轨 AI 问答助手
-            </p>
+            <TextType
+              as="p"
+              className="text-sm md:text-base text-text-secondary tracking-wider"
+              cursorClassName="text-cinnabar"
+              text={[
+                '欢迎来到南渡',
+                'DeepSeek V3 · RAG 检索增强 · 滇越铁路垂直领域大模型',
+                '一百二十年米轨史 · 工程档案 · 沿线民俗 皆可问询',
+                '答必有据，引必溯源',
+              ]}
+              typingSpeed={70}
+              deletingSpeed={35}
+              pauseDuration={2200}
+              loop
+            />
           </div>
 
           {/* 主角：大输入框 */}

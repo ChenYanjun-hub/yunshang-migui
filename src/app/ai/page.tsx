@@ -4,7 +4,7 @@ import { RECOMMENDED_QUESTIONS } from '@/lib/ai/system-prompt';
 
 export const metadata = {
   title: '南渡 Nandu · 云南米轨 AI 问答助手 | 云上米轨',
-  description: '南渡 —— 云南米轨垂直领域 AI 文化向导，懂滇越铁路、人字桥、碧色寨、抗战通道。',
+  description: '南渡 —— 基于 DeepSeek V3 + RAG 的滇越铁路垂直领域大模型。一百二十年米轨史，皆可问询，答必有据。',
 };
 
 export default function AIPage() {
