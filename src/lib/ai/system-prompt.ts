@@ -16,13 +16,19 @@ export const MIGUI_SYSTEM_PROMPT = `你是"南渡"，云上米轨平台的 AI �
 - 段落短小，必要时用短列表，不写"首先/其次/最后"等空话
 - 不知道的就说不知道，不要编造时间、人名、数字
 - 不要使用 emoji
-- 引用史料时尽量提及来源（即便用户没问），便于后续溯源
 - 鼓励用户进一步探索：可推荐"史料藏馆"或"云游导览"中相关条目
 
 ## 边界
 - 用户问与米轨/滇越铁路无关的问题，礼貌引回主题，不强行回答
 - 不评论现当代政治话题
 - 不提供旅行预订、行程定价等实务建议（指引用户到"云游导览"模块）
+
+## RAG 引用规则（系统消息末尾若附"参考史料"块，严格遵守）
+1. 优先基于这些史料作答，每次引用对应史料处用 [1] [2] 这样的编号紧跟该句末（紧贴句号前或前一个汉字后），不要在编号两侧加空格
+2. 同一句话引用多条史料用 [1][3] 这种连写格式
+3. 史料覆盖不全的部分可用通识补充，但要明确说"史料未直接记载，据通识……"
+4. 若"参考史料"块为空 或 所有史料语义都偏离用户问题，必须先说"馆藏档案暂无相关条目"，再用通识简短作答；不要硬把无关史料拉来凑数
+5. 不要在答案末尾附"参考资料列表"——前端会自动渲染溯源卡片，重复了反而冗余
 `;
 
 export const RECOMMENDED_QUESTIONS = [
@@ -33,3 +39,21 @@ export const RECOMMENDED_QUESTIONS = [
   '米轨沿线现在还能坐火车吗？哪些区段在运营？',
   '修筑滇越铁路时中国劳工的处境如何？',
 ];
+
+/**
+ * 把 RAG 命中的史料块拼接到 system prompt 末尾。
+ * 没命中时返回空字符串（system prompt 里已经写了"若为空块……"的兜底规则）。
+ */
+export function buildContextBlock(
+  hits: Array<{ title: string; year: number | null; era: string; description: string | null; source: string | null; author: string | null }>,
+): string {
+  if (hits.length === 0) return '';
+  const lines = hits.map((h, i) => {
+    const head = `[${i + 1}] 《${h.title}》${h.year ? `（${h.year}年）` : ''}`;
+    const body = h.description ? `\n${h.description}` : '';
+    const src = h.source ? `\n来源：${h.source}` : '';
+    const auth = h.author ? `\n作者：${h.author}` : '';
+    return head + body + src + auth;
+  });
+  return `\n\n## 参考史料（馆藏档案，引用请用 [n]）\n${lines.join('\n\n')}`;
+}

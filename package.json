@@ -6,7 +6,11 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "embed:archives": "node --env-file=.env.local --import tsx scripts/embed-archives.ts",
+    "smoke:retrieve": "node --env-file=.env.local --import tsx scripts/smoke-retrieve.ts",
+    "seed:batch2": "node --env-file=.env.local --import tsx scripts/seed-archives-batch2.ts",
+    "seed:community": "node --env-file=.env.local --import tsx scripts/seed-community-demo.ts"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^2.0.47",
@@ -18,7 +22,9 @@
     "next": "16.2.4",
     "ogl": "^1.0.11",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -28,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
