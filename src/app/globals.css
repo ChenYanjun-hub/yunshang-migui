@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 /* ========================================
+   京華老宋体（KingHwa OldSong）
+   - 本地子集化版本，999 字符（项目静态 CJK 850 + ASCII + 中英文标点）
+   - 单文件 ~776KB woff2，font-display: swap 不阻塞首屏
+   - 漏字 fallback 到 Noto Serif SC（var(--font-serif-cn)）
+   - 子集脚本：scripts/build-kinghwa-subset.sh（见 README）
+   ======================================== */
+@font-face {
+  font-family: "KingHwaOldSong";
+  src: local("KingHwaOldSong"),
+       url("/fonts/kinghwa-old-song/KingHwaOldSong.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ========================================
    云上米轨 - 设计系统配置
    Design System: Academy Fine Arts + Architectural Aesthetics
    ======================================== */
@@ -86,7 +102,7 @@
   --color-cinnabar-hover: var(--cinnabar-hover);
   --color-cinnabar-soft: var(--cinnabar-soft);
 
-  --font-serif: "Kinghwa OldSong", var(--font-serif-cn), "Songti SC", Georgia, serif;
+  --font-serif: "KingHwaOldSong", var(--font-serif-cn), "Songti SC", Georgia, serif;
   --font-sans: var(--font-sans-cn), "PingFang SC", -apple-system, sans-serif;
   --font-serif-en: var(--font-garamond), Georgia, "Noto Serif SC", serif;
   --font-typewriter: var(--font-typewriter), "Special Elite", "Courier New", monospace;
@@ -241,6 +257,37 @@ body {
   to {
     opacity: 1;
   }
+}
+
+/* ========================================
+   Exhibition Wall · 横向画卷专用样式
+   - 朱砂细滚动条，呼应整站印章语言
+   - 首屏一次性 wiggle 提示用户可横滑
+   ======================================== */
+
+.exhibition-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.exhibition-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.exhibition-scroll::-webkit-scrollbar-thumb {
+  background: var(--cinnabar);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+.exhibition-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--cinnabar) transparent;
+}
+
+@keyframes wall-hint {
+  0%, 100% { transform: translateX(0); }
+  30%      { transform: translateX(-14px); }
+  60%      { transform: translateX(6px); }
+}
+.exhibition-hint {
+  animation: wall-hint 0.75s ease-out 0.6s 1 both;
 }
 
 .page-fade-in {
