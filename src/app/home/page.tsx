@@ -122,10 +122,10 @@ export default function Home() {
                 <div className="absolute top-0 left-3 right-3 h-[3px] bg-accent/70" />
 
                 <div className="px-5 pt-7 pb-6">
-                  {/* 车厢编号 */}
+                  {/* 车厢编号 —— 档案档号印章感 */}
                   <div className="flex items-center justify-between mb-6">
                     <span
-                      className="text-[10px] tracking-[0.3em] uppercase text-text-muted italic"
+                      className="px-1.5 py-0.5 text-[9px] tracking-[0.3em] uppercase text-cinnabar italic border border-cinnabar/40 bg-cinnabar-soft"
                       style={enFont}
                     >
                       No.{item.no}
@@ -133,11 +133,11 @@ export default function Home() {
                     <span className="block w-4 h-px bg-border-hard" />
                   </div>
 
-                  {/* 中文图标 */}
+                  {/* 中文图标 —— hover 朱砂"史料章"感 */}
                   <div
                     className="mx-auto mb-6 w-14 h-14 flex items-center justify-center
                                font-serif text-2xl text-accent border border-accent/40
-                               group-hover:bg-accent group-hover:text-background
+                               group-hover:bg-cinnabar group-hover:border-cinnabar group-hover:text-[#f8f5ee]
                                transition-colors duration-500"
                   >
                     {item.icon}
@@ -208,7 +208,8 @@ export default function Home() {
               <div key={index} className="bg-background px-6 py-10 text-center">
                 <div className="font-serif text-5xl md:text-6xl font-medium text-text-primary mb-3 tracking-tight">
                   {stat.value}
-                  <span className="text-xl text-accent ml-1 font-normal">{stat.unit}</span>
+                  {/* 单位染朱砂 —— 数据切片的"句读印记" */}
+                  <span className="text-xl text-cinnabar ml-1 font-normal">{stat.unit}</span>
                 </div>
                 <div
                   className="text-[10px] text-text-muted tracking-[0.4em] uppercase italic"
@@ -248,9 +249,9 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6">
               {timelineEras.map((era, index) => (
                 <div key={index} className="group relative cursor-pointer">
-                  {/* 节点 */}
+                  {/* 节点 —— 默认金边，hover 朱砂填充：穿越百年的"重要刻度" */}
                   <div className="hidden md:flex justify-center mb-8">
-                    <span className="w-3 h-3 border border-accent bg-background relative z-10 group-hover:bg-accent transition-colors" />
+                    <span className="w-3 h-3 border border-accent bg-background relative z-10 group-hover:bg-cinnabar group-hover:border-cinnabar transition-colors" />
                   </div>
 
                   <div className="text-center md:text-left md:px-2">

@@ -161,6 +161,8 @@ export default function Intro() {
         >
           Click anywhere to enter
         </span>
+        {/* 朱砂启印：进入门户的小印章 */}
+        <span aria-hidden className="block w-2 h-2 bg-cinnabar" />
         <div className="w-px h-8 bg-gradient-to-b from-accent/60 to-transparent" />
       </div>
     </main>

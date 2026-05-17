@@ -1,49 +1,70 @@
-'use client';
-
+import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
+import { createClient } from '@/lib/supabase/server';
+import {
+  ExhibitionWall,
+  ExhibitionGridFallback,
+  type WallItem,
+} from '@/components/exhibition/ExhibitionWall';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
-const exhibitionItems = [
-  {
-    id: 'e1',
-    title: '滇越铁路百年影像记录',
-    en: 'A Century in Frames',
-    author: '云南省档案馆',
-    type: 'Documentary',
-    seed: 'expo-1',
-    likes: 1234,
-  },
-  {
-    id: 'e2',
-    title: '碧色寨光影记忆',
-    en: 'Light & Memory of Bisezhai',
-    author: '李明',
-    type: 'Photo Series',
-    seed: 'expo-2',
-    likes: 856,
-  },
-  {
-    id: 'e3',
-    title: '米轨上的时光',
-    en: 'Time Along the Narrow Gauge',
-    author: '王晓',
-    type: 'Travelogue',
-    seed: 'expo-3',
-    likes: 672,
-  },
-  {
-    id: 'e4',
-    title: '寻找消失的站点',
-    en: 'In Search of Lost Stations',
-    author: '张华',
-    type: 'Essay',
-    seed: 'expo-4',
-    likes: 445,
-  },
-];
+const CATEGORY_LABEL: Record<string, string> = {
+  photo: '老照片',
+  document: '文献',
+  map: '手绘地图',
+  blueprint: '工程图纸',
+  newspaper: '报刊剪报',
+  oral_history: '口述史',
+};
+const ERA_LABEL: Record<string, string> = {
+  construction: '修建期',
+  operation: '运营期',
+  republic: '民国时期',
+  prc: '建国后',
+  heritage: '遗产保护',
+};
 
-export default function ExhibitionPage() {
+export default async function ExhibitionPage() {
+  const supabase = await createClient();
+
+  // 主展墙：优先取「老照片」「手绘地图」类，按年份升序，最多 12 件
+  const { data: archiveRows } = await supabase
+    .from('archives')
+    .select('id, title, category, era, year, source, cover_url, image_urls')
+    .eq('status', 'published')
+    .in('category', ['photo', 'map'])
+    .order('year', { ascending: true })
+    .limit(12);
+
+  const wallItems: WallItem[] = (archiveRows ?? [])
+    .map((r): WallItem | null => {
+      const cover =
+        r.cover_url ??
+        (Array.isArray(r.image_urls) && r.image_urls.length > 0 ? r.image_urls[0] : null);
+      if (!cover) return null;
+      return {
+        id: r.id,
+        title: r.title,
+        year: r.year ?? null,
+        category: CATEGORY_LABEL[r.category] ?? r.category,
+        era: ERA_LABEL[r.era] ?? r.era,
+        source: r.source ?? null,
+        coverUrl: cover,
+      };
+    })
+    .filter((x): x is WallItem => x !== null);
+
+  // 用户作品 gallery（按发布倒序，最多 8 张）
+  const { data: galleryRows } = await supabase
+    .from('gallery_photos')
+    .select('id, title, author, photo_url, taken_at')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false })
+    .limit(8);
+
+  const galleryPhotos = galleryRows ?? [];
+
   return (
     <main className="min-h-screen bg-background text-foreground page-fade-in">
       <Navigation />
@@ -69,92 +90,16 @@ export default function ExhibitionPage() {
             curated alongside the works of those who walked the rails.
           </p>
           <p className="text-sm text-text-secondary leading-relaxed max-w-2xl">
-            3D 立体照片墙与用户创作专区，集结官方纪录、独立摄影与社区影像。
+            横向滚动穿越 {wallItems.length || '—'} 件官方馆藏，下方汇集摄影爱好者的米轨创作。
           </p>
         </div>
       </section>
 
-      {/* FEATURED */}
-      <section className="px-6 md:px-12 pb-16 border-y border-border-subtle py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-baseline justify-between mb-10">
-            <h2 className="font-serif text-2xl tracking-[0.15em] text-text-primary">精选展览</h2>
-            <span
-              className="text-[10px] tracking-[0.4em] uppercase italic text-text-muted"
-              style={enFont}
-            >
-              Curated
-            </span>
-          </div>
+      {/* 主展墙 —— md+ 横向 pin scroll，sm 降级为 2 列 grid */}
+      <ExhibitionWall items={wallItems} />
+      <ExhibitionGridFallback items={wallItems} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {exhibitionItems.map((item) => (
-              <article
-                key={item.id}
-                className="group bg-surface-1 border border-border-subtle cursor-pointer
-                           transition-all duration-500 hover:border-accent/50
-                           hover:shadow-[0_18px_36px_-20px_rgba(168,136,74,0.35)]"
-              >
-                <div className="relative overflow-hidden aspect-[16/10] bg-surface-2">
-                  <img
-                    src={`https://picsum.photos/seed/${item.seed}/1200/750?grayscale`}
-                    alt={item.title}
-                    width={1200}
-                    height={750}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    style={{ filter: 'sepia(0.18) contrast(0.96)' }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(20,18,14,0.75)] via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4 px-2 py-1 bg-background/85 border border-border-subtle">
-                    <span
-                      className="text-[9px] tracking-[0.3em] uppercase italic text-text-secondary"
-                      style={enFont}
-                    >
-                      {item.type}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-5 left-5 right-5 text-white">
-                    <p
-                      className="text-[10px] tracking-[0.3em] uppercase italic text-white/70 mb-1"
-                      style={enFont}
-                    >
-                      {item.en}
-                    </p>
-                    <h3 className="font-serif text-xl tracking-[0.1em] mb-1">{item.title}</h3>
-                    <p
-                      className="text-[11px] italic text-white/70"
-                      style={enFont}
-                    >
-                      by {item.author}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-5 py-3 flex items-center justify-between border-t border-border-subtle">
-                  <span
-                    className="text-[10px] tracking-[0.3em] uppercase italic text-text-muted"
-                    style={enFont}
-                  >
-                    ♡ {item.likes.toLocaleString()}
-                  </span>
-                  <span
-                    className="text-[10px] tracking-[0.3em] uppercase italic text-text-muted
-                               group-hover:text-accent transition-colors inline-flex items-center gap-1"
-                    style={enFont}
-                  >
-                    Enter
-                    <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* USER GALLERY */}
+      {/* USER GALLERY —— 真 UGC 数据 */}
       <section className="px-6 md:px-12 py-24">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-10">
@@ -168,41 +113,74 @@ export default function ExhibitionPage() {
               <h2 className="font-serif text-2xl tracking-[0.15em] text-text-primary">用户创作</h2>
             </div>
             <button
-              className="px-5 py-2.5 text-xs tracking-[0.25em] border border-accent text-accent
-                         hover:bg-accent hover:text-background transition-colors"
+              type="button"
+              disabled
+              title="演示期由管理员代为录入；正式版上线后开放上传"
+              className="px-5 py-2.5 text-xs tracking-[0.25em] border border-border-hard text-text-muted cursor-not-allowed"
             >
-              上传作品
+              上传作品 [soon]
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square bg-surface-1 border border-border-subtle relative overflow-hidden
-                           hover:border-accent/50 transition-colors cursor-pointer group"
+          {galleryPhotos.length === 0 ? (
+            <div className="border border-dashed border-border-subtle py-20 text-center">
+              <p
+                className="text-[10px] tracking-[0.4em] uppercase italic text-text-muted mb-3"
+                style={enFont}
               >
-                <img
-                  src={`https://picsum.photos/seed/ugc-${i}/600/600?grayscale`}
-                  alt={`用户作品 ${i + 1}`}
-                  width={600}
-                  height={600}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                  style={{ filter: 'sepia(0.18) contrast(0.96)' }}
-                />
-                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span
-                    className="text-[9px] tracking-[0.3em] uppercase italic text-white/90 px-2 py-0.5 bg-[rgba(20,18,14,0.7)]"
-                    style={enFont}
-                  >
-                    No.{String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+                Awaiting first submissions
+              </p>
+              <p className="text-sm text-text-secondary">
+                等待第一批用户创作 · 管理员可在{' '}
+                <Link href="/admin/gallery" className="text-accent hover:underline">
+                  /admin/gallery
+                </Link>{' '}
+                录入
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              {galleryPhotos.map((p, i) => (
+                <article
+                  key={p.id}
+                  className="aspect-square bg-surface-1 border border-border-subtle relative overflow-hidden
+                             hover:border-accent/50 transition-colors group"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.photo_url}
+                    alt={p.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                    style={{ filter: 'sepia(0.18) contrast(0.96)' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(20,18,14,0.85)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-2 left-2">
+                    <span
+                      className="text-[9px] tracking-[0.3em] uppercase italic text-white/90 px-2 py-0.5 bg-[rgba(20,18,14,0.7)]"
+                      style={enFont}
+                    >
+                      No.{String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="font-serif text-xs text-white tracking-[0.08em] leading-tight">
+                      {p.title}
+                    </p>
+                    {p.author && (
+                      <p
+                        className="text-[10px] italic text-white/75 mt-0.5"
+                        style={enFont}
+                      >
+                        by {p.author}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

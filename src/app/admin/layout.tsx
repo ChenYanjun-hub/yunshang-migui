@@ -17,6 +17,7 @@ const ROLE_LABEL: Record<string, string> = {
 const ALL_ITEMS = [
   { href: '/admin', label: '总览', en: 'Overview', roles: ['*'] },
   { href: '/admin/archives', label: '史料管理', en: 'Archives', roles: ['admin_product', 'super_admin'] },
+  { href: '/admin/gallery', label: '影像管理', en: 'Gallery', roles: ['admin_ops', 'super_admin'] },
   { href: '/admin/products', label: '商品管理', en: 'Products', roles: ['admin_biz', 'super_admin'] },
   { href: '/admin/community', label: '社区审核', en: 'Community', roles: ['admin_ops', 'super_admin'] },
   { href: '/admin/users', label: '用户管理', en: 'Users', roles: ['super_admin'] },

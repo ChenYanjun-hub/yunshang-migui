@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import ArchiveClient, { type ArchiveItem, type ArchivePeriod, type ArchiveType } from './ArchiveClient';
 
@@ -38,5 +39,10 @@ export default async function ArchivePage() {
     })
     .filter((x): x is ArchiveItem => x !== null);
 
-  return <ArchiveClient archives={archives} />;
+  // useSearchParams 在客户端组件中使用要求父侧包 Suspense 边界
+  return (
+    <Suspense fallback={null}>
+      <ArchiveClient archives={archives} />
+    </Suspense>
+  );
 }

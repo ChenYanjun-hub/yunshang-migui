@@ -3,6 +3,22 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { embedAndUpsertArchive } from '@/lib/ai/archive-embed';
+
+/**
+ * 同步刷新单条 archive 的向量索引。
+ * 写入失败不阻断管理后台主流程 —— 仅打日志，让 `npm run embed:archives` 后续兜底补齐。
+ */
+async function syncEmbedding(archiveId: string) {
+  try {
+    const r = await embedAndUpsertArchive(archiveId);
+    if (r.skipped) {
+      console.warn(`[admin] embed skipped for ${archiveId}: ${r.skipped}`);
+    }
+  } catch (err) {
+    console.error(`[admin] embed failed for ${archiveId}:`, err);
+  }
+}
 
 export type ArchiveFormState = { error?: string; ok?: boolean };
 
@@ -56,14 +72,18 @@ export async function createArchive(_prev: ArchiveFormState, formData: FormData)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: '未登录' };
 
-  const { error } = await supabase.from('archives').insert({
-    ...parsed.payload,
-    created_by: user.id,
-  });
+  const { data: inserted, error } = await supabase
+    .from('archives')
+    .insert({ ...parsed.payload, created_by: user.id })
+    .select('id')
+    .single();
   if (error) return { error: error.message };
+
+  if (inserted?.id) await syncEmbedding(inserted.id);
 
   revalidatePath('/admin/archives');
   revalidatePath('/archive');
+  revalidatePath('/exhibition');
   redirect('/admin/archives');
 }
 
@@ -77,8 +97,11 @@ export async function updateArchive(id: string, _prev: ArchiveFormState, formDat
     .eq('id', id);
   if (error) return { error: error.message };
 
+  await syncEmbedding(id);
+
   revalidatePath('/admin/archives');
   revalidatePath('/archive');
+  revalidatePath('/exhibition');
   redirect('/admin/archives');
 }
 
@@ -88,6 +111,7 @@ export async function deleteArchive(id: string) {
   if (error) throw new Error(error.message);
   revalidatePath('/admin/archives');
   revalidatePath('/archive');
+  revalidatePath('/exhibition');
 }
 
 export async function setArchiveStatus(id: string, status: 'draft' | 'published' | 'archived') {
@@ -97,6 +121,10 @@ export async function setArchiveStatus(id: string, status: 'draft' | 'published'
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', id);
   if (error) throw new Error(error.message);
+
+  await syncEmbedding(id); // helper 内部根据 status 决定 upsert / 删除
+
   revalidatePath('/admin/archives');
   revalidatePath('/archive');
+  revalidatePath('/exhibition');
 }
