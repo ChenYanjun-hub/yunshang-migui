@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 
 export type ArchivePeriod = 'construction' | 'operation' | 'republic' | 'prc' | 'heritage';
@@ -32,11 +33,34 @@ const typeLabels: Record<ArchiveType, string> = {
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
+// "PDF 占位"覆盖的 archive type
+const DOCUMENT_LIKE_TYPES: ArchiveType[] = ['document', 'newspaper', 'blueprint'];
+
+/**
+ * 基于 id 的稳定伪页数（4-25 之间）
+ * 演示用：让"共 X 页"在同一条目上始终一致，不会刷新一次跳一个数
+ * 真实接入 PDF.js 时直接读 PDF metadata，替换此函数
+ */
+function fakePageCount(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return (h % 22) + 4;
+}
+
 export default function ArchiveClient({ archives }: { archives: ArchiveItem[] }) {
   const [period, setPeriod] = useState<ArchivePeriod | 'all'>('all');
   const [type, setType] = useState<ArchiveType | 'all'>('all');
   const [keyword, setKeyword] = useState('');
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  // 从 ?open=<id> 自动打开对应 Lightbox（南渡 AI 引用卡片点击落点）
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const openId = searchParams?.get('open');
+    if (openId && archives.some((a) => a.id === openId)) {
+      setActiveId(openId);
+    }
+  }, [searchParams, archives]);
 
   const filtered = useMemo(() => {
     return archives.filter((item) => {
@@ -269,6 +293,11 @@ function ArchiveCard({ item, onClick }: { item: ArchiveItem; onClick: () => void
 }
 
 function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void }) {
+  // "PDF 类"占位：document / newspaper / blueprint 三类显示 PDF 徽章 + Format 行
+  // 演示前不接 PDF.js，仅做"视觉信号 + 信息密度"，让评委理解"完整版会员解锁"
+  const isDocLike = DOCUMENT_LIKE_TYPES.includes(item.type);
+  const pageCount = isDocLike ? fakePageCount(item.id) : null;
+
   const content = (
     <div
       role="dialog"
@@ -305,6 +334,21 @@ function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void })
               云上米轨 · YUNSHANG MIGUI
             </span>
           </div>
+
+          {/* PDF 占位徽章：仅 document / newspaper / blueprint 显示 */}
+          {isDocLike && pageCount !== null && (
+            <div className="absolute left-4 bottom-4 bg-ink/85 border border-cinnabar/60 px-3 py-2 backdrop-blur-sm pointer-events-none max-w-[calc(100%-2rem)]">
+              <p
+                className="text-[10px] tracking-[0.3em] uppercase text-cinnabar mb-0.5"
+                style={{ fontFamily: 'var(--font-typewriter)' }}
+              >
+                PDF · 文献扫描件
+              </p>
+              <p className="text-[11px] text-white/85 font-serif tracking-wider">
+                共 {pageCount} 页 · 仅预览首页
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="p-6 md:p-8 flex flex-col overflow-y-auto max-h-[88vh]">
@@ -335,6 +379,14 @@ function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void })
               <dt className="w-24 tracking-[0.3em] uppercase italic text-text-muted" style={enFont}>Record</dt>
               <dd className="text-text-primary uppercase tracking-wider">{item.id.slice(0, 8)}</dd>
             </div>
+            {isDocLike && pageCount !== null && (
+              <div className="flex">
+                <dt className="w-24 tracking-[0.3em] uppercase italic text-text-muted" style={enFont}>Format</dt>
+                <dd className="text-text-primary">
+                  PDF · {pageCount} 页 · <span className="text-text-muted">高清原件待解锁</span>
+                </dd>
+              </div>
+            )}
           </dl>
 
           <div className="mt-auto pt-8 space-y-4">
