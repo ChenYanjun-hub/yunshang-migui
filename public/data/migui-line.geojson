@@ -1,0 +1,111 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "name": "滇越铁路米轨线路 · MVP 数据",
+    "note": "6 站点 + 主线 LineString。MVP 占位数据，待 32 站点全量清单替换。坐标精度仅供视觉演示，非测绘级。",
+    "source": "Wikipedia / 公开史料整理",
+    "lineLengthKm": 855,
+    "stationCountTotal": 32,
+    "version": "0.1.0-mvp"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "s1",
+      "geometry": { "type": "Point", "coordinates": [102.7173, 25.0469] },
+      "properties": {
+        "name": "昆明北站",
+        "en": "Kunming North",
+        "status": "active",
+        "built": 1910,
+        "kmFromKunming": 0,
+        "order": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "s2",
+      "geometry": { "type": "Point", "coordinates": [103.1390, 24.9081] },
+      "properties": {
+        "name": "宜良站",
+        "en": "Yiliang",
+        "status": "active",
+        "built": 1910,
+        "kmFromKunming": 65,
+        "order": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "s3",
+      "geometry": { "type": "Point", "coordinates": [103.2716, 23.7152] },
+      "properties": {
+        "name": "开远站",
+        "en": "Kaiyuan",
+        "status": "active",
+        "built": 1910,
+        "kmFromKunming": 230,
+        "order": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "s4",
+      "geometry": { "type": "Point", "coordinates": [103.4147, 23.4767] },
+      "properties": {
+        "name": "碧色寨站",
+        "en": "Bisezhai",
+        "status": "heritage",
+        "built": 1909,
+        "kmFromKunming": 290,
+        "order": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "s5",
+      "geometry": { "type": "Point", "coordinates": [103.4107, 23.3911] },
+      "properties": {
+        "name": "蒙自站",
+        "en": "Mengzi",
+        "status": "active",
+        "built": 1909,
+        "kmFromKunming": 310,
+        "order": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "s6",
+      "geometry": { "type": "Point", "coordinates": [103.9573, 22.5008] },
+      "properties": {
+        "name": "河口口岸",
+        "en": "Hekou",
+        "status": "border",
+        "built": 1910,
+        "kmFromKunming": 469,
+        "order": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "main-line",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [102.7173, 25.0469],
+          [103.1390, 24.9081],
+          [103.2716, 23.7152],
+          [103.4147, 23.4767],
+          [103.4107, 23.3911],
+          [103.9573, 22.5008]
+        ]
+      },
+      "properties": {
+        "name": "米轨主线",
+        "en": "Migui Main Line",
+        "kind": "rail-line"
+      }
+    }
+  ]
+}
