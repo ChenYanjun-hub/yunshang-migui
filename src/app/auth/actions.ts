@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 
-export type AuthResult = { error?: string };
+export type AuthResult = { ok?: true; error?: string; redirect?: string };
 
 export async function signInWithPassword(formData: FormData): Promise<AuthResult> {
   const email = String(formData.get('email') ?? '').trim();
@@ -17,8 +17,10 @@ export async function signInWithPassword(formData: FormData): Promise<AuthResult
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
 
+  // 不在 server action 里 redirect()，避免 NEXT_REDIRECT 信号被 client 的
+  // startTransition(async) 包装吞掉。让客户端拿到 ok 后用 router.push 跳。
   revalidatePath('/', 'layout');
-  redirect(redirectTo);
+  return { ok: true, redirect: redirectTo };
 }
 
 export async function signUpWithPassword(formData: FormData): Promise<AuthResult> {
@@ -38,7 +40,7 @@ export async function signUpWithPassword(formData: FormData): Promise<AuthResult
   if (error) return { error: error.message };
 
   revalidatePath('/', 'layout');
-  redirect('/user');
+  return { ok: true, redirect: '/user' };
 }
 
 export async function signOut() {

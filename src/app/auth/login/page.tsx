@@ -2,13 +2,14 @@
 
 import { useState, useTransition, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { signInWithPassword } from '../actions';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
 function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') ?? '/user';
   const [tab, setTab] = useState<'email' | 'phone'>('email');
@@ -20,7 +21,15 @@ function LoginForm() {
     formData.set('redirect', redirectTo);
     startTransition(async () => {
       const res = await signInWithPassword(formData);
-      if (res?.error) setError(res.error);
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      if (res?.ok) {
+        // server action 已写好 cookie + revalidatePath，这里客户端跳页
+        router.replace(res.redirect ?? '/user');
+        router.refresh();
+      }
     });
   }
 

@@ -2,12 +2,14 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { signUpWithPassword } from '../actions';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -15,7 +17,14 @@ export default function RegisterPage() {
     setError(null);
     startTransition(async () => {
       const res = await signUpWithPassword(formData);
-      if (res?.error) setError(res.error);
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      if (res?.ok) {
+        router.replace(res.redirect ?? '/user');
+        router.refresh();
+      }
     });
   }
 
