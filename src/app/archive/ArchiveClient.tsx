@@ -95,28 +95,28 @@ export default function ArchiveClient({ archives }: { archives: ArchiveItem[] })
     <main className="min-h-screen bg-background text-foreground page-fade-in">
       <Navigation />
 
-      <section className="pt-32 pb-12 px-6 md:px-12">
+      <section className="pt-24 md:pt-32 pb-8 md:pb-12 px-5 md:px-12">
         <div className="max-w-6xl mx-auto">
-          <p className="text-[11px] tracking-[0.5em] uppercase italic text-accent mb-4" style={enFont}>
+          <p className="text-[10px] md:text-[11px] tracking-[0.4em] md:tracking-[0.5em] uppercase italic text-accent mb-3 md:mb-4" style={enFont}>
             Archive · 史料藏馆
           </p>
-          <h1 className="font-serif text-4xl md:text-6xl tracking-[0.05em] text-text-primary mb-6 leading-tight">
+          <h1 className="font-serif text-[2rem] md:text-6xl tracking-[0.03em] md:tracking-[0.05em] text-text-primary mb-4 md:mb-6 leading-tight">
             数字米轨史料藏馆
           </h1>
-          <p className="italic text-text-secondary text-base md:text-lg leading-relaxed max-w-2xl mb-3" style={enFont}>
+          <p className="italic text-text-secondary text-sm md:text-lg leading-relaxed max-w-2xl mb-3" style={enFont}>
             A century of photographs, blueprints, journals and voices —
             <br className="hidden md:block" />
             tracing the steel spine across mountains and time.
           </p>
-          <p className="text-sm text-text-secondary leading-relaxed max-w-2xl">
+          <p className="text-[13px] md:text-sm text-text-secondary leading-relaxed max-w-2xl">
             收录百年滇越铁路的珍贵史料，包括老照片、文献档案、工程图纸、手绘地图与口述记忆，按时期与类型多维归档。
           </p>
         </div>
       </section>
 
       <section className="border-y border-border-subtle bg-surface-2/50">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 py-8">
-          <div className="grid md:grid-cols-[1fr_1fr_auto] gap-8 items-start">
+        <div className="max-w-6xl mx-auto px-5 md:px-12 py-6 md:py-8">
+          <div className="grid md:grid-cols-[1fr_1fr_auto] gap-5 md:gap-8 items-start">
             <div>
               <p className="text-[10px] tracking-[0.4em] uppercase italic text-text-muted mb-3" style={enFont}>
                 Period · 时期
@@ -142,7 +142,7 @@ export default function ArchiveClient({ archives }: { archives: ArchiveItem[] })
             </div>
 
             <div className="md:w-64">
-              <p className="text-[10px] tracking-[0.4em] uppercase italic text-text-muted mb-3" style={enFont}>
+              <p className="text-[10px] tracking-[0.4em] uppercase italic text-text-muted mb-2 md:mb-3" style={enFont}>
                 Search · 关键词
               </p>
               <input
@@ -150,12 +150,12 @@ export default function ArchiveClient({ archives }: { archives: ArchiveItem[] })
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="标题 / 描述 / 来源…"
-                className="w-full px-3 py-2 bg-surface-1 border border-border-hard text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors"
+                className="w-full px-3 py-2.5 md:py-2 bg-surface-1 border border-border-hard text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors"
               />
             </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-between border-t border-border-subtle pt-4">
+          <div className="mt-5 md:mt-6 flex items-center justify-between gap-3 border-t border-border-subtle pt-3 md:pt-4">
             <p className="text-[11px] tracking-[0.3em] uppercase italic text-text-muted" style={enFont}>
               Showing <span className="text-accent">{filtered.length}</span> of {archives.length} records
             </p>
@@ -172,10 +172,10 @@ export default function ArchiveClient({ archives }: { archives: ArchiveItem[] })
         </div>
       </section>
 
-      <section className="px-6 md:px-12 py-16">
+      <section className="px-5 md:px-12 py-10 md:py-16">
         <div className="max-w-6xl mx-auto">
           {filtered.length === 0 ? (
-            <div className="py-32 text-center">
+            <div className="py-20 md:py-32 text-center">
               <p className="text-[11px] tracking-[0.4em] uppercase italic text-text-muted mb-3" style={enFont}>
                 No matching records
               </p>
@@ -184,7 +184,7 @@ export default function ArchiveClient({ archives }: { archives: ArchiveItem[] })
               </p>
             </div>
           ) : (
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-6">
               {filtered.map((item) => (
                 <ArchiveCard key={item.id} item={item} onClick={() => setActiveId(item.id)} />
               ))}
@@ -304,26 +304,29 @@ function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void })
       aria-modal="true"
       aria-label={item.title}
       onClick={onClose}
-      className="fixed inset-0 z-50 bg-[rgba(20,18,14,0.95)] animate-[lightbox-in_280ms_ease-out] flex items-center justify-center p-6"
+      className="fixed inset-0 z-[1200] bg-[rgba(20,18,14,0.95)] animate-[lightbox-in_280ms_ease-out] flex items-center justify-center p-3 md:p-6"
     >
       <button
         onClick={onClose}
         aria-label="关闭"
-        className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center border border-white/30 text-white/80 hover:border-accent hover:text-accent transition-colors text-xl"
+        className="absolute top-4 right-4 md:top-6 md:right-6 z-10 w-10 h-10 flex items-center justify-center border border-white/30 text-white/80 hover:border-accent hover:text-accent transition-colors text-xl bg-background/40 backdrop-blur-sm"
       >
         ×
       </button>
 
+      {/* 移动端：纵向堆叠 image(45vh 上限) + info(剩余空间可滚动) · 桌面端：左右 1.4:1 分栏 */}
+      {/* 容器 overflow-hidden 防止子项 max-h 突破 */}
       <div
-        className="relative max-w-5xl w-full grid md:grid-cols-[1.4fr_1fr] gap-0 bg-background border border-accent/30 max-h-[88vh]"
+        className="relative max-w-5xl w-full max-h-[92vh] bg-background border border-accent/30 overflow-hidden
+                   flex flex-col md:grid md:grid-cols-[1.4fr_1fr] md:max-h-[88vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative bg-surface-2 flex items-center justify-center">
+        <div className="relative bg-surface-2 flex items-center justify-center shrink-0 md:shrink">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={item.coverUrl}
             alt={item.title}
-            className="max-w-full max-h-[88vh] object-contain"
+            className="max-w-full max-h-[42vh] md:max-h-[88vh] object-contain block"
             style={{ filter: 'sepia(0.18) contrast(0.96)' }}
           />
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -351,7 +354,7 @@ function Lightbox({ item, onClose }: { item: ArchiveItem; onClose: () => void })
           )}
         </div>
 
-        <div className="p-6 md:p-8 flex flex-col overflow-y-auto max-h-[88vh]">
+        <div className="p-5 md:p-8 flex flex-col overflow-y-auto flex-1 min-h-0">
           <p className="text-[10px] tracking-[0.4em] uppercase italic text-accent mb-3" style={enFont}>
             {periodEn[item.period]} · {item.year}
           </p>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_SC, Noto_Serif_SC, EB_Garamond, Special_Elite } from "next/font/google";
 import "./globals.css";
 
@@ -35,6 +35,13 @@ export const metadata: Metadata = {
   title: "云上米轨 | Yunshang Migui",
   description: "一条云上米轨，半部西南近代史。滇越铁路数字文化遗产游览平台",
   keywords: ["滇越铁路", "米轨", "工业遗产", "云南", "历史文化", "文旅导览"],
+};
+
+// 移动端响应式：device-width + 允许用户手势缩放（不强锁 maximum-scale，照顾老花眼观众）
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#14110d",
 };
 
 export default function RootLayout({

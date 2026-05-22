@@ -237,16 +237,16 @@ body {
   color: var(--text-primary);
 }
 
+/* 注意：不能用 transform/filter/will-change，否则 <main class="page-fade-in"> 会成为
+ * fixed 元素的 containing block，Navigation 抽屉 inset-0 高度变成 main 高度而非 viewport，
+ * 导致 mt-auto 把"个人中心"推到 main 最底部、屏幕外看不见。
+ * 仅用 opacity 渐变，视觉影响小但解决了 fixed 定位被破坏的问题。 */
 @keyframes page-fade-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
-    filter: blur(2px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -292,7 +292,7 @@ body {
 
 .page-fade-in {
   animation: page-fade-in 540ms ease-out both;
-  will-change: opacity, transform, filter;
+  /* 不加 will-change —— 见上方 @keyframes 注释 */
 }
 
 .carriage {

@@ -95,7 +95,7 @@ export default function AIChatClient({ suggestions, initialQuery, from }: Props)
   // 空态：composer 居中 + 推荐问题在下
   if (empty) {
     return (
-      <section className="relative flex-1 flex flex-col items-center justify-center px-6 md:px-12 py-20 overflow-hidden">
+      <section className="relative flex-1 flex flex-col items-center justify-center px-4 md:px-12 pt-24 md:pt-20 pb-12 md:pb-20 overflow-hidden">
         {/* Threads 朱砂丝线背景 —— 像纸上晕开的墨与朱砂 */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.55]"
@@ -115,25 +115,26 @@ export default function AIChatClient({ suggestions, initialQuery, from }: Props)
 
         <div className="relative z-10 w-full max-w-3xl">
           {/* 品牌头 */}
-          <div className="text-center mb-10">
+          <div className="text-center mb-6 md:mb-10">
             <p
-              className="archive-label text-cinnabar mb-4"
+              className="archive-label text-cinnabar mb-3 md:mb-4 text-[9.5px] md:text-xs"
               style={{ fontFamily: 'var(--font-typewriter)' }}
             >
-              RECORD · NANDU · 1000mm GAUGE AI
+              <span className="md:hidden">NANDU · 1000mm GAUGE AI</span>
+              <span className="hidden md:inline">RECORD · NANDU · 1000mm GAUGE AI</span>
             </p>
-            <h1 className="font-serif text-5xl md:text-7xl tracking-[0.08em] text-ink mb-3 leading-none">
+            <h1 className="font-serif text-[3.5rem] md:text-7xl tracking-[0.08em] text-ink mb-2 md:mb-3 leading-none">
               南渡
             </h1>
             <p
-              className="italic text-text-secondary text-lg md:text-xl tracking-wide mb-3"
+              className="italic text-text-secondary text-base md:text-xl tracking-wide mb-3"
               style={enFont}
             >
               Nandu
             </p>
             <TextType
               as="p"
-              className="text-sm md:text-base text-text-secondary tracking-wider"
+              className="text-[13px] md:text-base text-text-secondary tracking-wider px-2"
               cursorClassName="text-cinnabar"
               text={[
                 '欢迎来到南渡',
@@ -160,17 +161,17 @@ export default function AIChatClient({ suggestions, initialQuery, from }: Props)
           />
 
           {/* 推荐问题（chip 网格） */}
-          <div className="mt-10">
-            <p className="archive-label text-center mb-4">SUGGESTED QUERIES · 试试这些</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="mt-6 md:mt-10">
+            <p className="archive-label text-center mb-3 md:mb-4 text-[9.5px] md:text-xs">SUGGESTED QUERIES · 试试这些</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-3">
               {suggestions.map((q) => (
                 <button
                   key={q}
                   type="button"
                   onClick={() => submit(q)}
-                  className="text-left border border-border-subtle hover:border-cinnabar bg-surface-1/60 hover:bg-cinnabar-soft px-4 py-3 transition-colors group"
+                  className="text-left border border-border-subtle hover:border-cinnabar bg-surface-1/60 hover:bg-cinnabar-soft px-3.5 md:px-4 py-2.5 md:py-3 transition-colors group"
                 >
-                  <span className="font-serif text-[14.5px] leading-relaxed text-text-primary group-hover:text-cinnabar transition-colors">
+                  <span className="font-serif text-[13.5px] md:text-[14.5px] leading-relaxed text-text-primary group-hover:text-cinnabar transition-colors">
                     {q}
                   </span>
                 </button>
@@ -185,19 +186,19 @@ export default function AIChatClient({ suggestions, initialQuery, from }: Props)
   // 有对话：消息流主体 + 底部输入栏
   return (
     <section className="flex-1 flex flex-col">
-      <div className="flex items-center justify-between px-6 md:px-12 pt-24 pb-3 border-b border-border-subtle bg-surface-2/30">
-        <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-cinnabar animate-pulse" />
-          <span className="font-serif text-base tracking-[0.2em] text-ink">南渡</span>
-          <span className="archive-label" style={enFont}>Nandu · live</span>
+      <div className="flex items-center justify-between px-4 md:px-12 pt-20 md:pt-24 pb-2.5 md:pb-3 border-b border-border-subtle bg-surface-2/30">
+        <div className="flex items-center gap-2.5 md:gap-3 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-cinnabar animate-pulse shrink-0" />
+          <span className="font-serif text-sm md:text-base tracking-[0.15em] md:tracking-[0.2em] text-ink">南渡</span>
+          <span className="archive-label truncate" style={enFont}>Nandu · live</span>
         </div>
         <span className="archive-label hidden md:block" style={enFont}>
           DeepSeek · streaming
         </span>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-12 py-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 md:px-12 py-5 md:py-8">
+        <div className="max-w-3xl mx-auto space-y-5 md:space-y-6">
           {messages.map((m, i) => {
             // 仅最后一条 assistant 消息 + 非流式时允许"重新生成"
             const isLastAssistant =
@@ -230,7 +231,7 @@ export default function AIChatClient({ suggestions, initialQuery, from }: Props)
         </div>
       </div>
 
-      <div className="border-t border-border-hard bg-surface-2/40 px-6 md:px-12 py-4">
+      <div className="border-t border-border-hard bg-surface-2/40 px-3 md:px-12 py-3 md:py-4">
         <div className="max-w-3xl mx-auto">
           <Composer
             inputRef={inputRef}
@@ -351,11 +352,11 @@ function MessageBubble({
   const hasContent = text.trim().length > 0;
 
   return (
-    <div className="flex gap-3">
-      <div className="shrink-0 w-9 h-9 border border-cinnabar text-cinnabar flex items-center justify-center font-serif text-sm">
+    <div className="flex gap-2 md:gap-3">
+      <div className="shrink-0 w-8 h-8 md:w-9 md:h-9 border border-cinnabar text-cinnabar flex items-center justify-center font-serif text-xs md:text-sm">
         南
       </div>
-      <div className="max-w-[88%] flex-1 min-w-0">
+      <div className="max-w-[calc(100%-2.5rem)] md:max-w-[88%] flex-1 min-w-0">
         <MarkdownAnswer text={text} citations={citations} />
         {hasContent && (
           <AnswerToolbar text={text} messageId={message.id} onRegenerate={onRegenerate} />
@@ -375,12 +376,12 @@ function CitationStrip({ citations }: { citations: Citation[] }) {
       >
         SOURCES · 引自馆藏 · {citations.length} 条
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2.5">
         {citations.map((c) => (
           <Link
             key={c.archive_id}
             href={`/archive?open=${c.archive_id}`}
-            className="group block border border-border-subtle hover:border-cinnabar bg-surface-1/60 hover:bg-cinnabar-soft px-3.5 py-3 transition-colors"
+            className="group block border border-border-subtle hover:border-cinnabar bg-surface-1/60 hover:bg-cinnabar-soft px-3 md:px-3.5 py-2.5 md:py-3 transition-colors"
           >
             <div className="flex items-baseline gap-2 mb-1.5">
               <span

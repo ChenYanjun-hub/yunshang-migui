@@ -77,17 +77,18 @@ export default function Home() {
       <Navigation />
 
       {/* ============ HERO ============ */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-12">
+      <section className="min-h-screen flex flex-col items-center justify-center px-5 md:px-6 pt-20 md:pt-24 pb-12">
         <p
-          className="archive-label mb-8 flex items-center gap-3"
+          className="archive-label mb-6 md:mb-8 flex items-center gap-2 md:gap-3 text-[9.5px] md:text-xs text-center"
           style={{ fontFamily: 'var(--font-typewriter)' }}
         >
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-cinnabar" />
-          <span>RECORD · DIANYUE RAILWAY · EST. 1910</span>
+          <span className="md:hidden">RECORD · EST. 1910</span>
+          <span className="hidden md:inline">RECORD · DIANYUE RAILWAY · EST. 1910</span>
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-cinnabar" />
         </p>
 
-        <h1 className="font-serif text-5xl md:text-7xl lg:text-[5.5rem] font-medium leading-[1.15] tracking-wide text-center text-text-primary">
+        <h1 className="font-serif text-[2.5rem] md:text-7xl lg:text-[5.5rem] font-medium leading-[1.15] tracking-wide text-center text-text-primary">
           一条<span className="text-migui-yellow">云上米轨</span>
           <br />
           半部西南近代史
@@ -107,8 +108,8 @@ export default function Home() {
         </div>
 
         {/* ============ TRAIN-CARRIAGE NAV ============ */}
-        <div className="w-full max-w-6xl mt-20" style={{ perspective: '1400px' }}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="w-full max-w-6xl mt-12 md:mt-20" style={{ perspective: '1400px' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
             {trainNavItems.map((item) => (
               <Link
                 key={item.href}
@@ -121,38 +122,38 @@ export default function Home() {
                 {/* 车顶金条 */}
                 <div className="absolute top-0 left-3 right-3 h-[3px] bg-accent/70" />
 
-                <div className="px-5 pt-7 pb-6">
+                <div className="px-3 md:px-5 pt-5 md:pt-7 pb-4 md:pb-6">
                   {/* 车厢编号 —— 档案档号印章感 */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
                     <span
-                      className="px-1.5 py-0.5 text-[9px] tracking-[0.3em] uppercase text-cinnabar italic border border-cinnabar/40 bg-cinnabar-soft"
+                      className="px-1.5 py-0.5 text-[8.5px] md:text-[9px] tracking-[0.25em] md:tracking-[0.3em] uppercase text-cinnabar italic border border-cinnabar/40 bg-cinnabar-soft"
                       style={enFont}
                     >
                       No.{item.no}
                     </span>
-                    <span className="block w-4 h-px bg-border-hard" />
+                    <span className="block w-3 md:w-4 h-px bg-border-hard" />
                   </div>
 
-                  {/* 中文图标 —— hover 朱砂"史料章"感 */}
+                  {/* 中文图标 */}
                   <div
-                    className="mx-auto mb-6 w-14 h-14 flex items-center justify-center
-                               font-serif text-2xl text-accent border border-accent/40
+                    className="mx-auto mb-4 md:mb-6 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center
+                               font-serif text-lg md:text-2xl text-accent border border-accent/40
                                group-hover:bg-cinnabar group-hover:border-cinnabar group-hover:text-[#f8f5ee]
                                transition-colors duration-500"
                   >
                     {item.icon}
                   </div>
 
-                  <h3 className="font-serif text-lg text-center tracking-[0.15em] text-text-primary mb-1.5">
+                  <h3 className="font-serif text-[15px] md:text-lg text-center tracking-[0.1em] md:tracking-[0.15em] text-text-primary mb-1 md:mb-1.5 leading-tight">
                     {item.title}
                   </h3>
                   <p
-                    className="text-[11px] text-center tracking-[0.25em] uppercase italic text-text-muted mb-4"
+                    className="text-[10px] md:text-[11px] text-center tracking-[0.2em] md:tracking-[0.25em] uppercase italic text-text-muted mb-2 md:mb-4"
                     style={enFont}
                   >
                     {item.en}
                   </p>
-                  <p className="text-[12px] text-center text-text-secondary leading-relaxed">
+                  <p className="text-[11px] md:text-[12px] text-center text-text-secondary leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -189,9 +190,9 @@ export default function Home() {
       </section>
 
       {/* ============ STATS ============ */}
-      <section className="py-24 md:py-32 border-y border-border-subtle bg-background/80 backdrop-blur-sm">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-16">
+      <section className="py-16 md:py-32 border-y border-border-subtle bg-background/80 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto px-5 md:px-6">
+          <div className="text-center mb-10 md:mb-16">
             <p
               className="text-[11px] tracking-[0.5em] uppercase italic text-accent mb-4"
               style={enFont}
@@ -205,11 +206,10 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border-subtle">
             {stats.map((stat, index) => (
-              <div key={index} className="bg-background px-6 py-10 text-center">
-                <div className="font-serif text-5xl md:text-6xl font-medium text-text-primary mb-3 tracking-tight">
+              <div key={index} className="bg-background px-3 md:px-6 py-7 md:py-10 text-center">
+                <div className="font-serif text-3xl md:text-6xl font-medium text-text-primary mb-2 md:mb-3 tracking-tight">
                   {stat.value}
-                  {/* 单位染朱砂 —— 数据切片的"句读印记" */}
-                  <span className="text-xl text-cinnabar ml-1 font-normal">{stat.unit}</span>
+                  <span className="text-base md:text-xl text-cinnabar ml-1 font-normal">{stat.unit}</span>
                 </div>
                 <div
                   className="text-[10px] text-text-muted tracking-[0.4em] uppercase italic"
@@ -224,9 +224,9 @@ export default function Home() {
       </section>
 
       {/* ============ TIMELINE ============ */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-20">
+      <section className="py-16 md:py-32">
+        <div className="max-w-6xl mx-auto px-5 md:px-6">
+          <div className="text-center mb-12 md:mb-20">
             <p
               className="text-[11px] tracking-[0.5em] uppercase italic text-accent mb-4"
               style={enFont}
@@ -246,7 +246,7 @@ export default function Home() {
             {/* 主轴线 */}
             <div className="hidden md:block absolute top-3 left-0 right-0 h-px bg-border-subtle" />
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6">
               {timelineEras.map((era, index) => (
                 <div key={index} className="group relative cursor-pointer">
                   {/* 节点 —— 默认金边，hover 朱砂填充：穿越百年的"重要刻度" */}
@@ -275,29 +275,30 @@ export default function Home() {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="py-32 text-center border-t border-border-subtle bg-background/80 backdrop-blur-sm">
+      <section className="py-20 md:py-32 text-center border-t border-border-subtle bg-background/80 backdrop-blur-sm">
         <p
-          className="text-[11px] tracking-[0.5em] uppercase italic text-accent mb-6"
+          className="text-[10px] md:text-[11px] tracking-[0.4em] md:tracking-[0.5em] uppercase italic text-accent mb-4 md:mb-6"
           style={enFont}
         >
           Begin Your Journey
         </p>
-        <h2 className="font-serif text-3xl md:text-4xl tracking-[0.1em] text-text-primary mb-12">
+        <h2 className="font-serif text-2xl md:text-4xl tracking-[0.08em] md:tracking-[0.1em] text-text-primary mb-8 md:mb-12">
           开启你的米轨之旅
         </h2>
-        <div className="flex gap-4 justify-center flex-wrap px-6">
+        {/* 移动端：竖排、按钮等宽撑满，避免 tracking 撑爆 */}
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center sm:flex-wrap px-5 md:px-6 max-w-md sm:max-w-none mx-auto">
           <Link
             href="/cloud-tour"
-            className="group px-10 py-4 bg-accent text-background border border-accent
-                       text-sm tracking-[0.25em] transition-all duration-300
+            className="group px-6 sm:px-10 py-3.5 md:py-4 bg-accent text-background border border-accent
+                       text-sm tracking-[0.2em] md:tracking-[0.25em] transition-all duration-300
                        hover:bg-transparent hover:text-accent"
           >
             开始云游 <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
           </Link>
           <Link
             href="/archive"
-            className="px-10 py-4 bg-transparent text-text-primary border border-border-hard
-                       text-sm tracking-[0.25em] transition-all duration-300
+            className="px-6 sm:px-10 py-3.5 md:py-4 bg-transparent text-text-primary border border-border-hard
+                       text-sm tracking-[0.2em] md:tracking-[0.25em] transition-all duration-300
                        hover:border-accent hover:text-accent"
           >
             探索史料
