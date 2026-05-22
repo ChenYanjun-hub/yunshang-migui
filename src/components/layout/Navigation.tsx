@@ -30,7 +30,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500
+      className={`fixed top-0 left-0 right-0 z-[1100] transition-[background-color,border-color,backdrop-filter] duration-500
         ${scrolled
           ? 'bg-background/85 backdrop-blur-md border-b border-border-subtle'
           : 'bg-gradient-to-b from-background/85 to-transparent border-b border-transparent'}

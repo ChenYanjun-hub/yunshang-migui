@@ -1,14 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Navigation } from '@/components/layout/Navigation';
-import { MiguiMap } from '@/components/cloud-tour/MiguiMap';
 import {
   stations,
   stationStatusLabel,
   stationIntro,
   PLACEHOLDER_INTRO,
 } from '@/data/migui-line';
+
+// Leaflet 依赖 window/document，必须客户端动态加载（SSR 阶段不导入）
+const MiguiMap = dynamic(
+  () => import('@/components/cloud-tour/MiguiLeafletMap').then((m) => m.MiguiLeafletMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 flex items-center justify-center text-text-muted text-sm tracking-[0.3em] italic">
+        loading map…
+      </div>
+    ),
+  }
+);
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
@@ -32,8 +45,10 @@ export default function CloudTourPage() {
         {/* 地图主体（底图 + 朱砂主线 + 站点印章） */}
         <MiguiMap activeStationId={activeId} onSelectStation={setActiveId} />
 
-        {/* 顶部标题 */}
-        <div className="absolute top-28 left-6 md:left-12 max-w-md">
+        {/* 顶部标题 · z-[1000] 盖 Leaflet · 磨砂半透明卡保证地图上可读 */}
+        <div className="absolute top-28 left-6 md:left-12 max-w-md z-[1000] pointer-events-none
+                        bg-surface-1/85 backdrop-blur-md border border-border-subtle
+                        px-5 py-4 md:px-6 md:py-5">
           <p
             className="text-[10px] tracking-[0.5em] uppercase italic text-cinnabar mb-2"
             style={enFont}
@@ -51,8 +66,8 @@ export default function CloudTourPage() {
           </p>
         </div>
 
-        {/* 层级切换 —— L2/L3 演示期锁定，仅 L1 可点 */}
-        <div className="absolute top-28 right-6 md:right-12 bg-surface-1/95 backdrop-blur-sm border border-border-subtle">
+        {/* 层级切换 —— L2/L3 演示期锁定，仅 L1 可点 · z-[1000] 盖 Leaflet */}
+        <div className="absolute top-28 right-6 md:right-12 bg-surface-1/95 backdrop-blur-sm border border-border-subtle z-[1000]">
           {layers.map((L) => {
             const isActive = layer === L.key;
             const isLocked = !L.enabled;
@@ -80,9 +95,9 @@ export default function CloudTourPage() {
           })}
         </div>
 
-        {/* 站点信息面板 */}
+        {/* 站点信息面板 · z-[1000] 盖 Leaflet */}
         <div className="absolute bottom-8 left-6 right-6 md:left-12 md:right-auto md:w-[26rem]
-                        bg-surface-1/95 backdrop-blur-sm border border-cinnabar/30">
+                        bg-surface-1/95 backdrop-blur-sm border border-cinnabar/30 z-[1000]">
           <div className="absolute top-0 left-4 right-4 h-[2px] bg-cinnabar/70" />
           <div className="p-6 md:p-7">
             <div className="flex items-start justify-between mb-4">

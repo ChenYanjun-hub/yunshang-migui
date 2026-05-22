@@ -1,7 +1,12 @@
 'use client';
 
 import { stations, mainLine } from '@/data/migui-line';
-import { computeBounds, createProjection } from '@/lib/geo/project';
+import {
+  computeBounds,
+  createProjection,
+  cumulativeKm,
+  snapByArclength,
+} from '@/lib/geo/project';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 const twFont = { fontFamily: 'var(--font-typewriter)' } as const;
@@ -12,15 +17,30 @@ const twFont = { fontFamily: 'var(--font-typewriter)' } as const;
 //   right: 22 ← 让出 L1/L2/L3 层级面板（top-28 right-12, w~200px）
 //   bottom: 14 ← station info card 在 md+ 是左下角，右下空，留少许即可
 //   left: 12 ← 标题块下方留出空间，但避免站点贴边
-const bounds = computeBounds(stations.map((s) => s.coord));
+// bbox 必须 union stations + mainLine，否则 OSM 主线超出 stations 极值的点（北端 25.06
+// 比昆明站 25.041 还北 2km；东端 104.01 比河口站 103.957 还东 5km）会投影到 viewBox
+// 外，视觉表现为"线路跟站点错位"。
+const bounds = computeBounds([
+  ...stations.map((s) => s.coord),
+  ...mainLine,
+]);
 const projection = createProjection(bounds, {
   width: 100,
   height: 100,
   padding: { top: 30, right: 22, bottom: 14, left: 12 },
 });
 
+// Snap-to-line：用户清单的 34 站点经纬度跟 OSM 真实轨道偏差 5-77km（中段尤其严重，
+// 可能是不同时期/不同支线的混合数据）。但 station 顺序 + kmFromKunming 比例是可信的。
+// 这里把每个站点按"声明里程 / 总里程"的比例映射到 OSM 真实轨道上的对应弧长位置，
+// 视觉上 100% 对齐，且语义保留（碧色寨仍在 54% 处、河口在终点）。
+const lineCum = cumulativeKm(mainLine);
+const totalStationKm = stations[stations.length - 1].kmFromKunming;
+
 const projectedStations = stations.map((s) => {
-  const [x, y] = projection.project(s.coord);
+  const fraction = totalStationKm > 0 ? s.kmFromKunming / totalStationKm : 0;
+  const displayCoord = snapByArclength(fraction, mainLine, lineCum);
+  const [x, y] = projection.project(displayCoord);
   return { ...s, xPct: x, yPct: y };
 });
 

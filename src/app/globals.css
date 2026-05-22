@@ -411,3 +411,44 @@ body {
   font-family: var(--font-serif);
   color: var(--ink);
 }
+
+/* ========================================
+   Cloud Tour · Leaflet 地图层 cinematic 化
+   让现代高德瓦片接入项目 cream-on-cream 复古美学
+   ======================================== */
+
+/* 让 Leaflet 瓦片层 sepia 化（保留可读性的同时统一项目调性） */
+.migui-tile-sepia {
+  filter: sepia(0.35) saturate(0.7) contrast(0.95) brightness(1.02);
+}
+
+/* 站点 Marker 自定义图标的 hover 微动效 */
+.migui-station-icon:hover > div {
+  transform: scale(1.15) !important;
+}
+
+/* Leaflet 默认 attribution 太刺眼，调淡 */
+.leaflet-control-attribution {
+  background: rgba(248, 245, 238, 0.7) !important;
+  font-size: 9px !important;
+  font-style: italic;
+  color: var(--text-muted) !important;
+}
+.leaflet-control-attribution a {
+  color: var(--cinnabar) !important;
+}
+
+/* Leaflet zoom 控件适配项目风格 */
+.leaflet-control-zoom {
+  border: 1px solid var(--border-hard) !important;
+  box-shadow: none !important;
+}
+.leaflet-control-zoom a {
+  background: var(--surface-1) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-subtle) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--surface-2) !important;
+  color: var(--cinnabar) !important;
+}
