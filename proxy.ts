@@ -44,8 +44,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 已登录用户访问 auth 页面跳转回个人中心
-  if (pathname.startsWith('/auth/') && user) {
+  // 已登录用户访问 auth 页面跳转回个人中心 ——
+  // 但 confirm（邮件回跳处理）/ reset-password（恢复 session 后改密码）/ forgot-password
+  // 必须允许已登录访问：邮件回跳后用户已有 recovery session，若被弹回 /user 就改不了密码
+  const AUTH_ALLOW_WHEN_LOGGED_IN = [
+    '/auth/confirm',
+    '/auth/reset-password',
+    '/auth/forgot-password',
+  ];
+  const isAuthAllowedWhenLoggedIn = AUTH_ALLOW_WHEN_LOGGED_IN.some((p) => pathname.startsWith(p));
+  if (pathname.startsWith('/auth/') && user && !isAuthAllowedWhenLoggedIn) {
     const home = request.nextUrl.clone();
     home.pathname = '/user';
     home.search = '';

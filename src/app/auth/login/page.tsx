@@ -86,9 +86,18 @@ function LoginForm() {
               />
             </div>
             <div>
-              <label className="block text-[11px] tracking-[0.3em] uppercase text-text-muted mb-2" style={enFont}>
-                Password
-              </label>
+              <div className="flex items-baseline justify-between mb-2">
+                <label className="block text-[11px] tracking-[0.3em] uppercase text-text-muted" style={enFont}>
+                  Password
+                </label>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-[11px] tracking-wider italic text-text-muted hover:text-accent transition-colors"
+                  style={enFont}
+                >
+                  忘记密码？
+                </Link>
+              </div>
               <input
                 name="password"
                 type="password"

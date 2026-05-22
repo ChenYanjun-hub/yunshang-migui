@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { createClient } from '@/lib/supabase/server';
 import { signOut } from '../auth/actions';
+import ChangePasswordCard from './ChangePasswordCard';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
@@ -138,6 +139,9 @@ export default async function UserPage() {
                 </span>
               </div>
             ))}
+
+            {/* 修改密码 —— 唯一已实现可交互的项，与 menu 视觉一致 */}
+            <ChangePasswordCard />
           </div>
 
           <form action={signOut} className="pt-10">
