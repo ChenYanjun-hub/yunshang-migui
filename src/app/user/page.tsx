@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { createClient } from '@/lib/supabase/server';
 import { signOut } from '../auth/actions';
-import ChangePasswordCard from './ChangePasswordCard';
 
 const enFont = { fontFamily: 'var(--font-serif-en)' } as const;
 
@@ -13,12 +13,12 @@ const stats = [
 ];
 
 const menu = [
-  { title: '我的收藏', en: 'Collected Records', desc: '收藏的史料、站点与展览' },
-  { title: '打卡记录', en: 'Trail Log', desc: '沿米轨的足迹与时长统计' },
-  { title: '我的勋章', en: 'Digital Stamps', desc: '32 站徽章与稀有电子印章' },
-  { title: '订单管理', en: 'Orders', desc: '文创订单与研学预约' },
-  { title: '会员权益', en: 'VIP Benefits', desc: 'VIP 专属高清原图与折扣' },
-  { title: '账号设置', en: 'Account', desc: '个人信息、隐私与安全' },
+  { href: '/user/collected', title: '我的收藏', en: 'Collected Records', desc: '收藏的史料、站点与展览' },
+  { href: '/user/check-ins', title: '打卡记录', en: 'Trail Log', desc: '沿米轨的足迹与时长统计' },
+  { href: '/user/stamps', title: '我的勋章', en: 'Digital Stamps', desc: '32 站徽章与稀有电子印章' },
+  { href: '/user/orders', title: '订单管理', en: 'Orders', desc: '文创订单与研学预约' },
+  { href: '/user/vip', title: '会员权益', en: 'VIP Benefits', desc: 'VIP 专属高清原图与折扣' },
+  { href: '/user/account', title: '账号设置', en: 'Account', desc: '密码 · 个人信息 · 隐私安全' },
 ];
 
 const ROLE_LABEL: Record<string, { zh: string; en: string }> = {
@@ -118,8 +118,9 @@ export default async function UserPage() {
 
           <div className="border-t border-border-subtle">
             {menu.map((item) => (
-              <div
+              <Link
                 key={item.title}
+                href={item.href}
                 className="border-b border-border-subtle py-6 group cursor-pointer flex items-center justify-between gap-6"
               >
                 <div>
@@ -137,11 +138,8 @@ export default async function UserPage() {
                 <span className="text-text-muted group-hover:text-accent group-hover:translate-x-1 transition-all">
                   →
                 </span>
-              </div>
+              </Link>
             ))}
-
-            {/* 修改密码 —— 唯一已实现可交互的项，与 menu 视觉一致 */}
-            <ChangePasswordCard />
           </div>
 
           <form action={signOut} className="pt-10">
